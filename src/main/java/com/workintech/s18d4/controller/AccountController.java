@@ -9,11 +9,15 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/accounts")
+@RequestMapping("/account")
 public class AccountController {
 
-    @Autowired
     private AccountService accountService;
+
+    @Autowired
+    public AccountController(AccountService accountService) {
+        this.accountService = accountService;
+    }
 
     @GetMapping
     public List<Account> findAll(){
@@ -25,7 +29,7 @@ public class AccountController {
         return accountService.find(id);
     }
 
-    @PostMapping
+    @PostMapping("/{id}")
     public Account saveAccount(@RequestBody Account account){
         return accountService.save(account);
     }
@@ -37,8 +41,7 @@ public class AccountController {
 
     @DeleteMapping("/{id}")
     public Account deleteAccount(@PathVariable Long id){
+        Account account = accountService.find(id);
         return accountService.delete(id);
     }
-
-
 }

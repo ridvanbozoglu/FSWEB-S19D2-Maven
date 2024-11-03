@@ -12,8 +12,12 @@ import java.util.List;
 @RequestMapping("/address")
 public class AddressController {
 
-    @Autowired
     private AddressService addressService;
+
+    @Autowired
+    public AddressController(AddressService addressService) {
+        this.addressService = addressService;
+    }
 
     @GetMapping
     public List<Address> getAll(){

@@ -47,19 +47,21 @@ public class AccountServiceImpl implements AccountService{
     @Transactional
     @Override
     public AccountResponse update(Long customerId, Account account) {
-        Customer customer = customerRepository.findById(customerId).orElseThrow(() -> new RuntimeException("Customer bulunamadı!"));
-        account.setCustomer(customer);
-        accountRepository.save(account);
-        return new AccountResponse(account.getId(),account.getAccountName(),account.getMoneyAmount());
+        Optional<Customer> customerOptional = customerRepository.findById(customerId);
+        if (customerOptional.isPresent()){
+            account.setCustomer(customerOptional.get());
+            accountRepository.save(account);
+            return new AccountResponse(customerId,account.getAccountName(),account.getMoneyAmount());
+        } else return null;
     }
 
     @Transactional
     @Override
     public Account delete(Long id) {
-        Optional<Account> optionalAccount = accountRepository.findById(id);
-        if (optionalAccount.isPresent()){
-            accountRepository.delete(optionalAccount.get());
-            return optionalAccount.get();
+        Optional<Account> accountOptional = accountRepository.findById(id);
+        if (accountOptional.isPresent()){
+            accountRepository.delete(accountOptional.get());
+            return accountOptional.get();
         }else return null;
     }
 }
